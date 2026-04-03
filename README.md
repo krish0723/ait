@@ -17,6 +17,8 @@ DAW projects mix large binaries, caches, and structured project files. Plain Git
 
 Greenfield—stack and CLI shape are still open. Issues and ADRs will live here as the design firms up.
 
+**Product requirements:** [docs/PRD.md](docs/PRD.md) (draft). Next step for full pipeline: **design-app** → **plan-app**.
+
 ## License
 
 TBD.
