@@ -1,0 +1,20 @@
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+*.log
+
+# Common build / tool output (adjust when stack is chosen)
+dist/
+build/
+node_modules/
+target/
+.venv/
+__pycache__/
+*.pyc
+
+# DAW cruft often excluded from version control (expand per MVP)
+*.asd
+*.peak
+*~backup*
