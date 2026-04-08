@@ -17,7 +17,7 @@ DAW projects mix large binaries, caches, and structured project files. Plain Git
 
 Greenfield—stack and CLI shape are still open. Issues and ADRs will live here as the design firms up.
 
-**Product requirements:** [docs/PRD.md](docs/PRD.md) (draft). **Systems design:** [docs/design/ait-design.md](docs/design/ait-design.md). Next: **plan-app** for implementation plan.
+**Product requirements:** [docs/PRD.md](docs/PRD.md) (draft). **Systems design:** [docs/design/ait-design.md](docs/design/ait-design.md). **Implementation plan:** [.cursor/plans/ait-cli-mvp.plan.md](.cursor/plans/ait-cli-mvp.plan.md). Next: **implement-feature** / pre-flight per issue **AIT-01** … **AIT-08**.
 
 ## License
 
