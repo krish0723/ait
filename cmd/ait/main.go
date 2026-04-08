@@ -1,10 +1,12 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strings"
 
+	"github.com/krish0723/ait/internal/doctor"
 	"github.com/spf13/cobra"
 )
 
@@ -22,6 +24,10 @@ func main() {
 func run() int {
 	root := newRootCommand()
 	if err := root.Execute(); err != nil {
+		var fe *doctor.FailError
+		if errors.As(err, &fe) {
+			return 1
+		}
 		msg := err.Error()
 		fmt.Fprintln(os.Stderr, msg)
 		if isUsageError(msg) {
@@ -59,7 +65,9 @@ func newRootCommand() *cobra.Command {
 			_ = cmd.Help()
 		},
 	}
+	root.PersistentFlags().Bool("verbose", false, "more detail (e.g. doctor rule timings)")
 	root.AddCommand(newVersionCommand())
 	root.AddCommand(newInitCommand())
+	root.AddCommand(newDoctorCommand())
 	return root
 }

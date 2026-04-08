@@ -38,7 +38,7 @@ Authoritative detail for MVP implementation. Pair with [implementation-specs.md]
 
 | Flag | Commands | Behavior |
 |------|----------|------------|
-| `--verbose` `-v` | root (persistent) | More detail: rule timings, git command echo (optional), profile id printed on init/doctor. |
+| `--verbose` | root (persistent) | More detail: rule timings, git command echo (optional), profile id printed on init/doctor. (No `-v` shorthand on root: `ait version -v` is reserved for long version output.) |
 | `--help` | all | Cobra default. |
 
 **`ait version`:** support `--long` or `-v` for long output (profile bundle digest + go version).
