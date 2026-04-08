@@ -6,15 +6,16 @@ CLI tooling for version-controlling music production projects (Ableton-first MVP
 - **Language:** Go 1.22+ — [docs/adr/ADR-001-cli-implementation-language.md](docs/adr/ADR-001-cli-implementation-language.md)
 - **Module:** `github.com/krish0723/ait` — contracts in [docs/spec/cli-contract.md](docs/spec/cli-contract.md)
 - **CLI:** cobra; entrypoint `cmd/ait`
-- **Status:** Through **ALC-222** (scaffold, profiles, git adapter) on Linear; next **ALC-223** `init`.
+- **Status:** Through **ALC-223** (`ait init`) on Linear; next **ALC-224**+ per [docs/spec/implementation-specs.md](docs/spec/implementation-specs.md).
 
 ## Repository Structure
 - `docs/` — PRD, design, ADRs, normative specs — see [docs/AGENTS.md](docs/AGENTS.md)
 - `.cursor/plans/` — Execution plans (steps/graph); detailed behavior lives in `docs/spec/`
-- `cmd/ait/` — CLI entrypoint (`version` today; more commands in later issues)
+- `cmd/ait/` — CLI entrypoint (`version`, `init`; more commands in later issues)
 - `internal/profile/` — embedded `profiles/*.yaml` + `presets/*.yaml`, `Load`, `BundleDigest`
 - `internal/git/` — `Client` + injectable `Runner` (`ExecRunner`), 5s timeout; env `AIT_GIT_PATH`
-- `internal/{init,doctor,rules,hooks,config}/` — stubs / future commands
+- `internal/init/` — `ait init`: merge `.gitignore` / `.gitattributes` (§9 markers), optional `git init` / `git lfs install`
+- `internal/{doctor,rules,hooks,config}/` — stubs / future commands
 
 ## Conventions
 - **Specs over plans for coding:** use [docs/spec/implementation-specs.md](docs/spec/implementation-specs.md) + [docs/spec/cli-contract.md](docs/spec/cli-contract.md) as the primary implementer entry; keep them consistent with [docs/design/ait-design.md](docs/design/ait-design.md) and [docs/PRD.md](docs/PRD.md)

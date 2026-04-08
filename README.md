@@ -22,6 +22,8 @@ go build -o ait ./cmd/ait
 ./ait              # help
 ./ait version
 ./ait version -v   # long output (includes ProfileBundleDigest placeholder until profiles land)
+./ait init         # git init (if needed) + merge .gitignore / .gitattributes (Ableton@12, samples-ignored)
+./ait init --dry-run --path ./my-project
 ```
 
 Install from source: `go install github.com/krish0723/ait/cmd/ait@latest` (module matches this repository).
