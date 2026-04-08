@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -23,19 +24,29 @@ func main() {
 
 func run() int {
 	root := newRootCommand()
-	if err := root.Execute(); err != nil {
-		var fe *doctor.FailError
-		if errors.As(err, &fe) {
-			return 1
-		}
-		msg := err.Error()
-		fmt.Fprintln(os.Stderr, msg)
-		if isUsageError(msg) {
-			return 2
-		}
+	err := root.Execute()
+	return exitCodeForError(err, os.Stderr)
+}
+
+// exitCodeForError maps Execute errors to cli-contract §2/§3 exit codes (testable).
+func exitCodeForError(err error, stderr io.Writer) int {
+	if err == nil {
+		return 0
+	}
+	var fe *doctor.FailError
+	if errors.As(err, &fe) {
 		return 1
 	}
-	return 0
+	if errors.Is(err, doctor.ErrCLIUsage) {
+		fmt.Fprintln(stderr, err.Error())
+		return 2
+	}
+	msg := err.Error()
+	fmt.Fprintln(stderr, msg)
+	if isUsageError(msg) {
+		return 2
+	}
+	return 1
 }
 
 func isUsageError(msg string) bool {

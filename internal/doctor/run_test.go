@@ -3,6 +3,8 @@ package doctor
 import (
 	"bytes"
 	"context"
+	"errors"
+	"io"
 	"os"
 	"testing"
 
@@ -20,6 +22,22 @@ func (warnRule) Run(*RuleContext) ([]Finding, error) {
 		Message:  "something off",
 		Hint:     "fix it",
 	}}, nil
+}
+
+func TestRun_invalidFailOnWrapsCLIUsage(t *testing.T) {
+	err := Run(context.Background(), Options{
+		Dir:       t.TempDir(),
+		ProfileID: "ableton@12",
+		Preset:    "minimal",
+		FailOn:    "bogus",
+		Out:       io.Discard,
+	})
+	if err == nil {
+		t.Fatal("expected error")
+	}
+	if !errors.Is(err, ErrCLIUsage) {
+		t.Fatalf("expected ErrCLIUsage, got %v", err)
+	}
 }
 
 func TestRun_failOnWarn(t *testing.T) {

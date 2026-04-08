@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"io"
 	"strings"
 	"testing"
 )
@@ -25,5 +26,17 @@ func TestUnknownSubcommandExitUsage(t *testing.T) {
 	msg := `unknown command "nope" for "ait"`
 	if !isUsageError(msg) {
 		t.Fatal("expected usage-style error")
+	}
+}
+
+func TestExitCodeInvalidFailOn(t *testing.T) {
+	cmd := newRootCommand()
+	cmd.SetArgs([]string{"doctor", "--fail-on", "bogus"})
+	cmd.SetOut(io.Discard)
+	var stderr bytes.Buffer
+	cmd.SetErr(&stderr)
+	err := cmd.Execute()
+	if got := exitCodeForError(err, &stderr); got != 2 {
+		t.Fatalf("exitCodeForError = %d, want 2; err=%v; stderr=%q", got, err, stderr.String())
 	}
 }

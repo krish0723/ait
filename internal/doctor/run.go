@@ -47,7 +47,7 @@ func resolveFailOn(s string) (Severity, error) {
 	case "warn":
 		return SeverityWarn, nil
 	default:
-		return "", fmt.Errorf("invalid --fail-on %q (use error or warn)", s)
+		return "", fmt.Errorf("%w: invalid --fail-on %q (use error or warn)", ErrCLIUsage, s)
 	}
 }
 
