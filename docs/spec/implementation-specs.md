@@ -37,7 +37,7 @@ Each section maps to a Linear issue. Global contracts: [cli-contract.md](./cli-c
 
 **Deliverables**
 
-- `go.mod` / `go.sum` — `module github.com/krishchetan/ait`, Go 1.22+
+- `go.mod` / `go.sum` — `module github.com/krish0723/ait`, Go 1.22+
 - `cmd/ait/main.go` — `Execute()` root; `SilenceErrors`/`SilenceUsage` tuned so usage errors → exit 2
 - `cmd/ait/version.go` — print `version`, `commit` via ldflags; `-v` long: Go runtime + **`ProfileBundleDigest`** string literal `not-embedded-yet` until ALC-221
 - Empty packages: `internal/profile`, `internal/git`, `internal/init`, `internal/doctor`, `internal/rules`, `internal/hooks`, `internal/config` — each `package x` + `doc.go` one-liner OK
