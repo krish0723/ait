@@ -16,8 +16,8 @@ func TestVersionLongIncludesDigestPlaceholder(t *testing.T) {
 		t.Fatal(err)
 	}
 	out := buf.String()
-	if !strings.Contains(out, "not-embedded-yet") {
-		t.Fatalf("expected ProfileBundleDigest placeholder in output, got:\n%s", out)
+	if !strings.Contains(out, "ProfileBundleDigest: sha256:") {
+		t.Fatalf("expected ProfileBundleDigest sha256 in output, got:\n%s", out)
 	}
 }
 

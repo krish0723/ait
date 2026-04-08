@@ -12,7 +12,8 @@ CLI tooling for version-controlling music production projects (Ableton-first MVP
 - `docs/` — PRD, design, ADRs, normative specs — see [docs/AGENTS.md](docs/AGENTS.md)
 - `.cursor/plans/` — Execution plans (steps/graph); detailed behavior lives in `docs/spec/`
 - `cmd/ait/` — CLI entrypoint (`version` today; more commands in later issues)
-- `internal/{profile,git,init,doctor,rules,hooks,config}/` — package stubs with doc.go placeholders
+- `internal/profile/` — embedded `profiles/*.yaml` + `presets/*.yaml`, `Load`, `BundleDigest`
+- `internal/{git,init,doctor,rules,hooks,config}/` — stubs / future commands
 
 ## Conventions
 - **Specs over plans for coding:** use [docs/spec/implementation-specs.md](docs/spec/implementation-specs.md) + [docs/spec/cli-contract.md](docs/spec/cli-contract.md) as the primary implementer entry; keep them consistent with [docs/design/ait-design.md](docs/design/ait-design.md) and [docs/PRD.md](docs/PRD.md)

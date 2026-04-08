@@ -1,0 +1,9 @@
+Backup/
+*.asd
+.DS_Store
+*.peak
+*.reapeaks
+.Renders/
+Exports/
+Bounces/
+Stems/

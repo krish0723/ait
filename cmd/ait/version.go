@@ -28,6 +28,6 @@ func newVersionCommand() *cobra.Command {
 			return nil
 		},
 	}
-	cmd.Flags().BoolP("long", "v", false, "print long version (includes digest placeholder until profiles ship)")
+	cmd.Flags().BoolP("long", "v", false, "print long version (includes embedded profile bundle digest)")
 	return cmd
 }

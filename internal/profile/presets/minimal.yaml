@@ -1,0 +1,7 @@
+schema_version: 1
+id: minimal
+profile: ableton@12
+ignore_extra: ""
+gitattributes_extra: ""
+doctor_extra:
+  rules: []
