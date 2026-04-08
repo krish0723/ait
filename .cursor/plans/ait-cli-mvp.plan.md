@@ -97,7 +97,9 @@ flowchart LR
 
 ## Execution Graph
 
-**Linear epic:** [ALC-219](https://linear.app/alcyon/issue/ALC-219/epic-ait-cli-mvp-ableton-first-macos) (Alcyon team)
+**Linear project:** [ait](https://linear.app/alcyon/project/ait-b7a84c915957) (Alcyon team) — epic + all issues below are on this project.
+
+**Linear epic:** [ALC-219](https://linear.app/alcyon/issue/ALC-219/epic-ait-cli-mvp-ableton-first-macos)
 
 ```yaml
 waves:
