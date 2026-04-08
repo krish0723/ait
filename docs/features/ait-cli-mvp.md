@@ -6,25 +6,26 @@
 | **Plan** | [.cursor/plans/ait-cli-mvp.plan.md](../../.cursor/plans/ait-cli-mvp.plan.md) |
 | **Design** | [docs/design/ait-design.md](../design/ait-design.md) |
 | **PRD** | [docs/PRD.md](../PRD.md) v0.2 |
+| **Linear epic** | [ALC-219](https://linear.app/alcyon/issue/ALC-219/epic-ait-cli-mvp-ableton-first-macos) |
 
 ## Overview
 
 First shippable **ait** CLI for **macOS**: **Ableton-first** profiles, **`init`** / **`doctor`** / **`hooks install`**, embedded YAML profiles + presets, collaboration **playbook** docs, and **GitHub Actions** CI.
 
-## Tracker issues (placeholders)
-
-Replace with real IDs after `gh issue create` (or Linear):
+## Linear issues (Alcyon)
 
 | ID | Title |
 |----|--------|
-| AIT-01 | Scaffold Go module, cobra, `ait version` |
-| AIT-02 | Embedded profiles + Ableton presets |
-| AIT-03 | internal/git subprocess adapter |
-| AIT-04 | `ait init` merge + git/lfs orchestration |
-| AIT-05 | Doctor engine + human output |
-| AIT-06 | Doctor rules suite + fixtures |
-| AIT-07 | `ait hooks install` / uninstall |
-| AIT-08 | `--json`, CI, collaboration playbook |
+| [ALC-220](https://linear.app/alcyon/issue/ALC-220) | Go scaffold + cobra + `ait version` |
+| [ALC-221](https://linear.app/alcyon/issue/ALC-221) | Embedded profiles + Ableton presets |
+| [ALC-222](https://linear.app/alcyon/issue/ALC-222) | `internal/git` subprocess adapter |
+| [ALC-223](https://linear.app/alcyon/issue/ALC-223) | `ait init` merge + git/lfs |
+| [ALC-224](https://linear.app/alcyon/issue/ALC-224) | Doctor engine + human output |
+| [ALC-225](https://linear.app/alcyon/issue/ALC-225) | Doctor rules suite + fixtures |
+| [ALC-226](https://linear.app/alcyon/issue/ALC-226) | `hooks install` / uninstall |
+| [ALC-227](https://linear.app/alcyon/issue/ALC-227) | `--json`, CI, collaboration playbook |
+
+**Blocking:** Linear `blockedBy` matches plan merge order (ALC-221/222 → ALC-220; ALC-223 → 221+222; chain through ALC-227).
 
 ## Acceptance criteria
 
@@ -54,5 +55,5 @@ Unit + integration with temp git repos; macOS CI; manual Ableton project folder.
 
 ## Debugging
 
-- `ait doctor --verbose` for rule timing and IDs.
+- `ait doctor --verbose` for rule timing and ids.
 - Verify `git` / `git-lfs` on PATH; `which ait` for hook resolution.
