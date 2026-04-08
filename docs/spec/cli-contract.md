@@ -8,7 +8,7 @@ Authoritative detail for MVP implementation. Pair with [implementation-specs.md]
 
 | Topic | Decision |
 |-------|----------|
-| Language / toolchain | Go **1.22+**, module path **`github.com/krishchetan/ait`** (change in scaffold PR if org differs). |
+| Language / toolchain | Go **1.22+**, module path **`github.com/krish0723/ait`** (this repository). |
 | CLI framework | **spf13/cobra** v1.x |
 | YAML | **gopkg.in/yaml.v3** for profiles/presets/config |
 | Platform | **macOS** test matrix only for v1; no `GOOS` build gates required in code unless convenient. |
