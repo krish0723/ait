@@ -26,6 +26,8 @@ go build -o ait ./cmd/ait
 
 Install from source: `go install github.com/krish0723/ait/cmd/ait@latest` (module matches this repository).
 
+Embedded DAW profiles and presets live under `internal/profile/profiles/` and `internal/profile/presets/` and are loaded via `internal/profile.Load` (see `docs/spec/cli-contract.md` §7).
+
 ## Repo status
 
 Go **CLI scaffold** is in place (`cmd/ait`, `internal/*` stubs). Track MVP work via Linear **ALC-220–227** (epic **ALC-219**).

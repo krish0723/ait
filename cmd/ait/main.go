@@ -12,7 +12,7 @@ import (
 var (
 	version             = "dev"
 	commit              = "none"
-	profileBundleDigest = "not-embedded-yet"
+	profileBundleDigest = ""
 )
 
 func main() {
