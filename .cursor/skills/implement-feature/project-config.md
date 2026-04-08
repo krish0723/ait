@@ -21,7 +21,7 @@ auto_test: true
 
 ## Tracker
 
-- **Linear** (`user-linear` MCP): project **ait**, identifiers **ALC-***
+- **Linear** (`plugin-linear-linear` MCP): project **ait**, identifiers **ALC-***
 
 ## Dev server
 
