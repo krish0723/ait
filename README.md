@@ -1,6 +1,6 @@
 # ait
 
-Version-control tooling for music production projects—starting with DAWs like **Ableton Live** (MVP), with **Logic Pro** and others later.
+Version-control tooling for music production projects—starting with DAWs like **Ableton Live** (MVP), with **Logic Pro** and others later. **Initial releases: macOS only.**
 
 ## Problem
 
