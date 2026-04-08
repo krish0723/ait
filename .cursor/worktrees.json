@@ -1,0 +1,9 @@
+{
+  "project": "ait",
+  "base_path": "~/.cursor/worktrees/ait",
+  "setup_commands": [],
+  "env_files": [],
+  "cleanup_commands": [],
+  "shared_resources": ["origin"],
+  "port_conflicts": {}
+}
