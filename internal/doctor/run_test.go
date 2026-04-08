@@ -11,6 +11,12 @@ import (
 	"github.com/krish0723/ait/internal/git"
 )
 
+type okGitMissingStub struct{}
+
+func (okGitMissingStub) ID() string { return "git.missing" }
+
+func (okGitMissingStub) Run(*RuleContext) ([]Finding, error) { return nil, nil }
+
 type warnRule struct{}
 
 func (warnRule) ID() string { return "test.warn" }
@@ -51,7 +57,7 @@ func TestRun_failOnWarn(t *testing.T) {
 		Out:       &buf,
 		Git:       git.NewClient(nil),
 		Rules: map[string]Rule{
-			"git.missing": gitMissingRule{},
+			"git.missing": fallbackGitMissingRule{},
 			"test.warn":   warnRule{},
 		},
 		RuleOrder: []string{"git.missing", "test.warn"},
@@ -73,7 +79,7 @@ func TestRun_warnBelowFailOnError(t *testing.T) {
 		Out:       &buf,
 		Git:       git.NewClient(nil),
 		Rules: map[string]Rule{
-			"git.missing": gitMissingRule{},
+			"git.missing": fallbackGitMissingRule{},
 			"test.warn":   warnRule{},
 		},
 		RuleOrder: []string{"git.missing", "test.warn"},
@@ -119,7 +125,7 @@ func TestRun_gitMissingWhenGitAlwaysFails(t *testing.T) {
 		Out:       &buf,
 		Git:       git.NewClient(nil),
 		Rules: map[string]Rule{
-			"git.missing": gitMissingRule{},
+			"git.missing": fallbackGitMissingRule{},
 		},
 		RuleOrder: []string{"git.missing"},
 		Config:    nil,
