@@ -6,14 +6,15 @@ CLI tooling for version-controlling music production projects (Ableton-first MVP
 - **Language:** Go 1.22+ — [docs/adr/ADR-001-cli-implementation-language.md](docs/adr/ADR-001-cli-implementation-language.md)
 - **Module:** `github.com/krish0723/ait` — contracts in [docs/spec/cli-contract.md](docs/spec/cli-contract.md)
 - **CLI:** cobra; entrypoint `cmd/ait`
-- **Status:** Scaffold shipped (**ALC-220**). Next: profiles **ALC-221**, etc.
+- **Status:** Through **ALC-222** (scaffold, profiles, git adapter) on Linear; next **ALC-223** `init`.
 
 ## Repository Structure
 - `docs/` — PRD, design, ADRs, normative specs — see [docs/AGENTS.md](docs/AGENTS.md)
 - `.cursor/plans/` — Execution plans (steps/graph); detailed behavior lives in `docs/spec/`
 - `cmd/ait/` — CLI entrypoint (`version` today; more commands in later issues)
 - `internal/profile/` — embedded `profiles/*.yaml` + `presets/*.yaml`, `Load`, `BundleDigest`
-- `internal/{git,init,doctor,rules,hooks,config}/` — stubs / future commands
+- `internal/git/` — `Client` + injectable `Runner` (`ExecRunner`), 5s timeout; env `AIT_GIT_PATH`
+- `internal/{init,doctor,rules,hooks,config}/` — stubs / future commands
 
 ## Conventions
 - **Specs over plans for coding:** use [docs/spec/implementation-specs.md](docs/spec/implementation-specs.md) + [docs/spec/cli-contract.md](docs/spec/cli-contract.md) as the primary implementer entry; keep them consistent with [docs/design/ait-design.md](docs/design/ait-design.md) and [docs/PRD.md](docs/PRD.md)
