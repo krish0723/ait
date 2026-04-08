@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -109,4 +110,32 @@ func (c *Client) GetConfig(ctx context.Context, dir, key string) (string, error)
 		return "", ErrConfigNotFound
 	}
 	return "", err
+}
+
+// RevParse runs git rev-parse for rev (e.g. "HEAD:path") in dir.
+func (c *Client) RevParse(ctx context.Context, dir, rev string) (string, error) {
+	out, _, err := c.runGit(ctx, dir, "rev-parse", rev)
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(out), nil
+}
+
+// BlobSize returns the object size for rev (e.g. "HEAD:file") via cat-file -s.
+func (c *Client) BlobSize(ctx context.Context, dir, rev string) (int64, error) {
+	sha, err := c.RevParse(ctx, dir, rev)
+	if err != nil {
+		return 0, err
+	}
+	out, _, err := c.runGit(ctx, dir, "cat-file", "-s", sha)
+	if err != nil {
+		return 0, err
+	}
+	return strconv.ParseInt(strings.TrimSpace(out), 10, 64)
+}
+
+// Show runs `git show object` (e.g. "HEAD:.ait/lock.json") in dir.
+func (c *Client) Show(ctx context.Context, dir, object string) (string, error) {
+	out, _, err := c.runGit(ctx, dir, "show", object)
+	return out, err
 }

@@ -6,7 +6,7 @@ CLI tooling for version-controlling music production projects (Ableton-first MVP
 - **Language:** Go 1.22+ — [docs/adr/ADR-001-cli-implementation-language.md](docs/adr/ADR-001-cli-implementation-language.md)
 - **Module:** `github.com/krish0723/ait` — contracts in [docs/spec/cli-contract.md](docs/spec/cli-contract.md)
 - **CLI:** cobra; entrypoint `cmd/ait`
-- **Status:** Through **ALC-224** (`ait doctor` engine) on Linear; next **ALC-225**+ per [docs/spec/implementation-specs.md](docs/spec/implementation-specs.md).
+- **Status:** Through **ALC-225** (`ait doctor` engine) on Linear; next **ALC-226**+ per [docs/spec/implementation-specs.md](docs/spec/implementation-specs.md).
 
 ## Repository Structure
 - `docs/` — PRD, design, ADRs, normative specs — see [docs/AGENTS.md](docs/AGENTS.md)
@@ -17,7 +17,8 @@ CLI tooling for version-controlling music production projects (Ableton-first MVP
 - `internal/init/` — `ait init`: merge `.gitignore` / `.gitattributes` (§9 markers), optional `git init` / `git lfs install`
 - `internal/doctor/` — `ait doctor` rule runner (ALC-224); rules filled in ALC-225
 - `internal/config/` — optional `.ait/config.yaml` (ALC-224)
-- `internal/{rules,hooks}/` — stubs / future commands
+- `internal/rules/` — doctor rule implementations + tests/fixtures (ALC-225)
+- `internal/hooks/` — stub / future commands
 
 ## Conventions
 - **Specs over plans for coding:** use [docs/spec/implementation-specs.md](docs/spec/implementation-specs.md) + [docs/spec/cli-contract.md](docs/spec/cli-contract.md) as the primary implementer entry; keep them consistent with [docs/design/ait-design.md](docs/design/ait-design.md) and [docs/PRD.md](docs/PRD.md)

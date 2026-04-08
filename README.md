@@ -30,7 +30,7 @@ go build -o ait ./cmd/ait
 
 Install from source: `go install github.com/krish0723/ait/cmd/ait@latest` (module matches this repository).
 
-Embedded DAW profiles and presets live under `internal/profile/profiles/` and `internal/profile/presets/` and are loaded via `internal/profile.Load` (see `docs/spec/cli-contract.md` §7).
+Doctor rules live under `internal/rules/` (wired from `cmd/ait` on startup). Embedded DAW profiles and presets live under `internal/profile/profiles/` and `internal/profile/presets/` and are loaded via `internal/profile.Load` (see `docs/spec/cli-contract.md` §7).
 
 Git subprocess calls use **`internal/git`** with a **5s** timeout per invocation. Override the git binary in tests or sandboxes with **`AIT_GIT_PATH`** (absolute path to `git`).
 

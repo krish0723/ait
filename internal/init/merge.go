@@ -140,3 +140,16 @@ func MergeIntoFile(existing []byte, body string, force bool) ([]byte, error) {
 	}
 	return []byte(out), nil
 }
+
+// HasAitMergeConflict reports duplicate or unpaired ait markers (cli-contract §9 / init.merge_conflict).
+func HasAitMergeConflict(existing []byte) bool {
+	lines := splitLines(string(existing))
+	bIdx, eIdx, nBegin, nEnd := findMarkers(lines)
+	if nBegin == 0 && nEnd == 0 {
+		return false
+	}
+	if nBegin == 1 && nEnd == 1 && bIdx >= 0 && eIdx > bIdx {
+		return false
+	}
+	return true
+}

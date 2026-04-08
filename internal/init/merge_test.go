@@ -76,3 +76,17 @@ func TestMergeIntoFile_forceDup(t *testing.T) {
 		t.Fatal(out)
 	}
 }
+
+func TestHasAitMergeConflict(t *testing.T) {
+	if HasAitMergeConflict(nil) {
+		t.Fatal("empty")
+	}
+	ok := []byte(AitBlock("x"))
+	if HasAitMergeConflict(ok) {
+		t.Fatalf("single pair: %s", ok)
+	}
+	bad := []byte("# BEGIN ait\n# BEGIN ait\n# END ait\n")
+	if !HasAitMergeConflict(bad) {
+		t.Fatal("expected conflict for duplicate begin")
+	}
+}
