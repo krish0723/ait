@@ -8,7 +8,7 @@
 			"architecture" : "x64"
 		},
 		"classnamespace" : "box",
-		"rect" : [ 100.0, 100.0, 720.0, 420.0 ],
+		"rect" : [ 100.0, 100.0, 780.0, 720.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 1,
 		"default_fontsize" : 12.0,
@@ -60,11 +60,11 @@
 					"id" : "obj-route",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 5,
-					"outlettype" : [ "", "", "", "", "" ],
-					"patching_rect" : [ 30.0, 180.0, 220.0, 22.0 ],
+					"numoutlets" : 11,
+					"outlettype" : [ "", "", "", "", "", "", "", "", "", "", "" ],
+					"patching_rect" : [ 30.0, 180.0, 520.0, 22.0 ],
 					"presentation" : 0,
-					"text" : "route exit preview ait_path git_path status"
+					"text" : "route exit preview ait_path git_path project_root status git_effective_root git_branch git_status git_clear_branches git_append_branch"
 				}
 
 			}
@@ -78,7 +78,7 @@
 					"parameter_enable" : 0,
 					"patching_rect" : [ 30.0, 230.0, 50.0, 22.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 320.0, 86.0, 50.0, 22.0 ]
+					"presentation_rect" : [ 320.0, 114.0, 50.0, 22.0 ]
 				}
 
 			}
@@ -92,7 +92,7 @@
 					"parameter_enable" : 0,
 					"patching_rect" : [ 100.0, 230.0, 450.0, 22.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 16.0, 118.0, 400.0, 80.0 ],
+					"presentation_rect" : [ 16.0, 468.0, 400.0, 100.0 ],
 					"text" : "(stdout/stderr preview)"
 				}
 
@@ -163,7 +163,7 @@
 					"parameter_enable" : 0,
 					"patching_rect" : [ 400.0, 300.0, 24.0, 24.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 16.0, 86.0, 24.0, 24.0 ]
+					"presentation_rect" : [ 16.0, 114.0, 24.0, 24.0 ]
 				}
 
 			}
@@ -172,11 +172,11 @@
 					"id" : "obj-t-save",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "bang", "bang" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "bang", "bang", "bang" ],
 					"patching_rect" : [ 400.0, 340.0, 42.0, 22.0 ],
 					"presentation" : 0,
-					"text" : "t b b"
+					"text" : "t b b b"
 				}
 
 			}
@@ -184,12 +184,12 @@
 				"box" : 				{
 					"id" : "obj-join",
 					"maxclass" : "newobj",
-					"numinlets" : 2,
+					"numinlets" : 3,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 400.0, 390.0, 95.0, 22.0 ],
 					"presentation" : 0,
-					"text" : "join 2"
+					"text" : "join 3"
 				}
 
 			}
@@ -216,7 +216,7 @@
 					"parameter_enable" : 0,
 					"patching_rect" : [ 520.0, 300.0, 24.0, 24.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 52.0, 86.0, 24.0, 24.0 ]
+					"presentation_rect" : [ 52.0, 114.0, 24.0, 24.0 ]
 				}
 
 			}
@@ -262,13 +262,356 @@
 			}
 , 			{
 				"box" : 				{
+					"id" : "obj-lbl-proj",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 400.0, 270.0, 280.0, 20.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 16.0, 70.0, 360.0, 20.0 ],
+					"text" : "PROJECT_ROOT (optional; empty = process.cwd Live set folder)"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-msg-proj",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 400.0, 290.0, 300.0, 22.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 16.0, 84.0, 354.0, 22.0 ],
+					"text" : ""
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-pre-proj",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 280.0, 280.0, 65.0, 22.0 ],
+					"presentation" : 0,
+					"text" : "prepend set"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-lbl-eff",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 520.0, 360.0, 220.0, 20.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 430.0, 142.0, 200.0, 20.0 ],
+					"text" : "Effective git -C root"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-msg-eff",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 520.0, 390.0, 320.0, 22.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 430.0, 160.0, 330.0, 22.0 ],
+					"text" : "(git refresh fills this)"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-pre-eff",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 600.0, 420.0, 65.0, 22.0 ],
+					"presentation" : 0,
+					"text" : "prepend set"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-lbl-git-panel",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 30.0, 520.0, 200.0, 20.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 16.0, 132.0, 220.0, 20.0 ],
+					"text" : "Git panel (subprocess git -C)"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-msg-git-branch",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 30.0, 550.0, 220.0, 22.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 16.0, 154.0, 200.0, 22.0 ],
+					"text" : "(branch)"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-pre-git-br",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 100.0, 575.0, 65.0, 22.0 ],
+					"presentation" : 0,
+					"text" : "prepend set"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-msg-git-status",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 30.0, 590.0, 360.0, 22.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 16.0, 178.0, 400.0, 36.0 ],
+					"text" : "(git status -sb)"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-pre-git-st",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 30.0, 560.0, 65.0, 22.0 ],
+					"presentation" : 0,
+					"text" : "prepend set"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-b-git-refresh",
+					"maxclass" : "button",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 200.0, 520.0, 24.0, 24.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 230.0, 150.0, 24.0, 24.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-msg-git-refresh",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 240.0, 520.0, 80.0, 22.0 ],
+					"presentation" : 0,
+					"text" : "git_refresh"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-msg-umenu-clear",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 400.0, 520.0, 50.0, 22.0 ],
+					"presentation" : 0,
+					"text" : "clear"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-pre-git-append",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 460.0, 550.0, 85.0, 22.0 ],
+					"presentation" : 0,
+					"text" : "prepend append"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-umenu-br",
+					"maxclass" : "umenu",
+					"numinlets" : 1,
+					"numoutlets" : 3,
+					"outlettype" : [ "int", "", "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 30.0, 640.0, 140.0, 22.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 16.0, 222.0, 200.0, 22.0 ],
+					"items" : [ "-", ",", "-" ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-pre-git-co",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 200.0, 680.0, 115.0, 22.0 ],
+					"presentation" : 0,
+					"text" : "prepend git_checkout"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-b-git-co",
+					"maxclass" : "button",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 200.0, 640.0, 24.0, 24.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 230.0, 220.0, 24.0, 24.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-lbl-co",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 230.0, 640.0, 120.0, 20.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 260.0, 220.0, 140.0, 20.0 ],
+					"text" : "Checkout selected"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-text-commit",
+					"maxclass" : "textedit",
+					"numinlets" : 1,
+					"numoutlets" : 4,
+					"outlettype" : [ "", "int", "", "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 30.0, 720.0, 320.0, 50.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 16.0, 258.0, 400.0, 40.0 ],
+					"fontsize" : 12.0
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-zl-join-commit",
+					"maxclass" : "newobj",
+					"numinlets" : 2,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
+					"patching_rect" : [ 30.0, 790.0, 75.0, 22.0 ],
+					"presentation" : 0,
+					"text" : "zl join 512"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-pre-git-commit",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 30.0, 830.0, 125.0, 22.0 ],
+					"presentation" : 0,
+					"text" : "prepend git_commit"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-b-commit",
+					"maxclass" : "button",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 380.0, 720.0, 24.0, 24.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 430.0, 258.0, 24.0, 24.0 ],
+					"hint" : "Stages everything in the repo (git add -A) then git commit -m. Nothing is committed if the message is empty or git errors."
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-lbl-commit",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 30.0, 700.0, 280.0, 20.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 16.0, 238.0, 420.0, 20.0 ],
+					"text" : "Commit message (uses git add -A — see tooltip on Commit button)"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-lbl-git-refresh",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 230.0, 520.0, 80.0, 20.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 260.0, 150.0, 80.0, 20.0 ],
+					"text" : "Refresh"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-lbl-save",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 430.0, 300.0, 80.0, 20.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 88.0, 86.0, 36.0, 20.0 ],
+					"presentation_rect" : [ 88.0, 114.0, 36.0, 20.0 ],
 					"text" : "Save"
 				}
 
@@ -281,7 +624,7 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 550.0, 280.0, 120.0, 20.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 88.0, 70.0, 140.0, 20.0 ],
+					"presentation_rect" : [ 88.0, 98.0, 140.0, 20.0 ],
 					"text" : "Smoke: ait version"
 				}
 
@@ -294,7 +637,7 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 30.0, 210.0, 80.0, 20.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 260.0, 70.0, 60.0, 20.0 ],
+					"presentation_rect" : [ 260.0, 98.0, 60.0, 20.0 ],
 					"text" : "exit"
 				}
 
@@ -351,6 +694,90 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-pre-proj", 0 ],
+					"source" : [ "obj-route", 4 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-pre-eff", 0 ],
+					"source" : [ "obj-route", 6 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-pre-git-br", 0 ],
+					"source" : [ "obj-route", 7 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-pre-git-st", 0 ],
+					"source" : [ "obj-route", 8 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-msg-umenu-clear", 0 ],
+					"source" : [ "obj-route", 9 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-pre-git-append", 0 ],
+					"source" : [ "obj-route", 10 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-msg-proj", 0 ],
+					"source" : [ "obj-pre-proj", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-msg-eff", 0 ],
+					"source" : [ "obj-pre-eff", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-msg-git-branch", 0 ],
+					"source" : [ "obj-pre-git-br", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-msg-git-status", 0 ],
+					"source" : [ "obj-pre-git-st", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-umenu-br", 0 ],
+					"source" : [ "obj-msg-umenu-clear", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-umenu-br", 0 ],
+					"source" : [ "obj-pre-git-append", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-msg-ait", 0 ],
 					"source" : [ "obj-pre-ait", 0 ]
 				}
@@ -372,15 +799,22 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-msg-git", 0 ],
+					"destination" : [ "obj-msg-proj", 0 ],
 					"source" : [ "obj-t-save", 0 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-msg-ait", 0 ],
+					"destination" : [ "obj-msg-git", 0 ],
 					"source" : [ "obj-t-save", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-msg-ait", 0 ],
+					"source" : [ "obj-t-save", 2 ]
 				}
 
 			}
@@ -395,6 +829,76 @@
 				"patchline" : 				{
 					"destination" : [ "obj-join", 1 ],
 					"source" : [ "obj-msg-git", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-join", 2 ],
+					"source" : [ "obj-msg-proj", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-node", 0 ],
+					"source" : [ "obj-msg-git-refresh", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-msg-git-refresh", 0 ],
+					"source" : [ "obj-b-git-refresh", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-umenu-br", 0 ],
+					"source" : [ "obj-b-git-co", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-pre-git-co", 0 ],
+					"source" : [ "obj-umenu-br", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-node", 0 ],
+					"source" : [ "obj-pre-git-co", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-text-commit", 0 ],
+					"source" : [ "obj-b-commit", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-zl-join-commit", 0 ],
+					"source" : [ "obj-text-commit", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-pre-git-commit", 0 ],
+					"source" : [ "obj-zl-join-commit", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-node", 0 ],
+					"source" : [ "obj-pre-git-commit", 0 ]
 				}
 
 			}
