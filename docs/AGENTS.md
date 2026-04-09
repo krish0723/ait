@@ -10,7 +10,8 @@ Product, architecture, and **normative** CLI documentation for **ait**.
 - `spec/doctor-json-example.json` — Example `doctor --json` output (schema v1)
 - `user/collaboration-playbook.md` — User guide: Git + Live collaboration habits
 - `features/ait-cli-mvp.md` — MVP feature index linking plan + Linear + specs
-- `adr/` — Decisions (e.g. Go + cobra for CLI; [ADR-002](adr/ADR-002-max-for-live-ui.md) Max for Live subprocess UI)
+- `features/vst-plugin-shell.md` — Planned AU/VST3 JUCE shell (epic **ALC-234**)
+- `adr/` — Decisions (e.g. Go + cobra for CLI; [ADR-002](adr/ADR-002-max-for-live-ui.md) M4L UI; [ADR-003](adr/ADR-003-vst-au-plugin-shell.md) native plugin shell)
 
 ## Patterns
 - **`spec/`** defines what implementers must satisfy; update it when locking behavior
