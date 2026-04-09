@@ -3,7 +3,7 @@
 ## Layout
 
 - **`ait-control.maxpat`** — Max patcher with **`node.script`** pointing at **`ait-control.node.js`** (same folder).
-- **`ait-control.node.js`** — Node for Max script: loads/saves settings, runs `child_process.spawn` for `ait version`.
+- **`ait-control.node.js`** — Node for Max script: loads/saves settings, runs `child_process.spawn` for `ait version` and for **`git -C <root> …`** (branch, status, checkout, commit).
 - **`package.json`** — metadata only (no npm install required for Max).
 
 Open **`ait-control.maxpat`** from this directory in **Max** or **Ableton Live** (Max for Live editor) so the relative path to the `.js` file resolves.
