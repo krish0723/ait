@@ -26,11 +26,14 @@ go build -o ait ./cmd/ait
 ./ait init --dry-run --path ./my-project
 ./ait doctor          # health checks (see docs/spec/cli-contract.md)
 ./ait doctor --fail-on warn
+./ait doctor --json   # machine-readable report (schema v1)
 ./ait hooks install   # pre-commit → ait doctor --hook
 ./ait hooks uninstall
 ```
 
 Install from source: `go install github.com/krish0723/ait/cmd/ait@latest` (module matches this repository).
+
+**Collaboration guide:** [docs/user/collaboration-playbook.md](docs/user/collaboration-playbook.md). **Homebrew formula:** coming soon — install from source via `go install` below for now.
 
 Doctor rules live under `internal/rules/` (wired from `cmd/ait` on startup). Embedded DAW profiles and presets live under `internal/profile/profiles/` and `internal/profile/presets/` and are loaded via `internal/profile.Load` (see `docs/spec/cli-contract.md` §7).
 

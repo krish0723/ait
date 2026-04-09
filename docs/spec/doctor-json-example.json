@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "ait_version": "0.1.0",
+  "profile": "ableton@12",
+  "preset": "samples-ignored",
+  "cwd": "/Users/you/music/MyLiveProject",
+  "findings": [
+    {
+      "code": "ableton.backup_tracked",
+      "severity": "error",
+      "message": "Tracked files under Backup/ (Live rolling backups).",
+      "path": "Backup/MySet/MySet 1.als",
+      "hint": "git rm -r --cached Backup && echo 'Backup/' >> .gitignore",
+      "doc_anchor": "playbook/backup-folder"
+    }
+  ]
+}

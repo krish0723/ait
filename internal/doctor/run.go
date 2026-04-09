@@ -28,6 +28,12 @@ type Options struct {
 
 	Verbose bool
 	Hook    bool
+	JSON    bool
+
+	// AitVersion is printed in JSON output (cli-contract §6); usually main.version ldflags.
+	AitVersion string
+	// JSONReportCWD, when set, overrides the JSON "cwd" field (golden tests).
+	JSONReportCWD string
 
 	Git   *git.Client
 	Rules map[string]Rule // nil => BuiltinRules()
@@ -116,14 +122,14 @@ func Run(ctx context.Context, opts Options) error {
 	executed := 0
 	for _, id := range order {
 		if ruleDisabled(id, rp, cfgDisabled) {
-			if opts.Verbose && !opts.Hook {
+			if opts.Verbose && !opts.Hook && !opts.JSON {
 				fmt.Fprintf(opts.Out, "rule %s: skipped (disabled)\n", id)
 			}
 			continue
 		}
 		rule := reg[id]
 		if rule == nil {
-			if opts.Verbose && !opts.Hook {
+			if opts.Verbose && !opts.Hook && !opts.JSON {
 				fmt.Fprintf(opts.Out, "rule %s: skipped (not implemented yet)\n", id)
 			}
 			continue
@@ -133,7 +139,7 @@ func Run(ctx context.Context, opts Options) error {
 		if err != nil {
 			return fmt.Errorf("rule %s: %w", id, err)
 		}
-		if opts.Verbose && !opts.Hook {
+		if opts.Verbose && !opts.Hook && !opts.JSON {
 			fmt.Fprintf(opts.Out, "rule %s: %s\n", id, time.Since(start).Round(time.Millisecond))
 		}
 		executed++
@@ -141,6 +147,27 @@ func Run(ctx context.Context, opts Options) error {
 	}
 
 	SortFindings(findings)
+
+	if opts.JSON {
+		jsonCWD := dir
+		if opts.JSONReportCWD != "" {
+			jsonCWD = opts.JSONReportCWD
+		}
+		if err := writeJSONReport(opts.Out, opts.AitVersion, jsonCWD, rp, findings); err != nil {
+			return err
+		}
+		failed := false
+		for _, f := range findings {
+			if f.MeetsFailOn(threshold) {
+				failed = true
+				break
+			}
+		}
+		if failed {
+			return &FailError{}
+		}
+		return nil
+	}
 
 	if opts.Hook {
 		var failed []Finding

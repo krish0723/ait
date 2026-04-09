@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "ait_version": "0.27.0-test",
+  "profile": "ableton@12",
+  "preset": "minimal",
+  "cwd": "__TEST_CWD__",
+  "findings": [
+    {
+      "code": "a.warn",
+      "severity": "warn",
+      "message": "heads up",
+      "path": "Backup/x.als",
+      "hint": "fix it",
+      "doc_anchor": "playbook/backup-folder"
+    },
+    {
+      "code": "z.info",
+      "severity": "info",
+      "message": "fyi"
+    }
+  ]
+}

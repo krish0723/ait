@@ -11,13 +11,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newDoctorCommand() *cobra.Command {
+func newDoctorCommand(aitVersion string) *cobra.Command {
 	var (
-		path   string
-		daw    string
-		preset string
-		failOn string
-		hook   bool
+		path    string
+		daw     string
+		preset  string
+		failOn  string
+		hook    bool
+		jsonOut bool
 	)
 	cmd := &cobra.Command{
 		Use:   "doctor",
@@ -55,15 +56,17 @@ func newDoctorCommand() *cobra.Command {
 
 			verbose, _ := cmd.Root().PersistentFlags().GetBool("verbose")
 			return doctor.Run(cmd.Context(), doctor.Options{
-				Dir:       absPath,
-				ProfileID: profileID,
-				Preset:    presetName,
-				FailOn:    failOn,
-				Verbose:   verbose,
-				Hook:      hook,
-				Git:       git.NewClient(nil),
-				Out:       cmd.OutOrStdout(),
-				Config:    cfg,
+				Dir:        absPath,
+				ProfileID:  profileID,
+				Preset:     presetName,
+				FailOn:     failOn,
+				Verbose:    verbose,
+				Hook:       hook,
+				JSON:       jsonOut,
+				AitVersion: aitVersion,
+				Git:        git.NewClient(nil),
+				Out:        cmd.OutOrStdout(),
+				Config:     cfg,
 			})
 		},
 	}
@@ -72,5 +75,6 @@ func newDoctorCommand() *cobra.Command {
 	cmd.Flags().StringVar(&preset, "preset", "samples-ignored", "preset name")
 	cmd.Flags().StringVar(&failOn, "fail-on", "error", "minimum severity that fails the run: error | warn")
 	cmd.Flags().BoolVar(&hook, "hook", false, "quiet hook mode: compact lines on failure; silent on success")
+	cmd.Flags().BoolVar(&jsonOut, "json", false, "print machine-readable report (schema v1); implies no human summary")
 	return cmd
 }
