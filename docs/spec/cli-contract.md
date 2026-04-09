@@ -129,6 +129,8 @@ Top-level object:
 
 Max for Live and other automations should use these **additive** `--json` flags. Default stdout when `--json` is omitted stays human-oriented. **`doctor --json`** remains the health report (§6); it is **not** duplicated here.
 
+**M4L reference device:** the `ait-control` Max patch (`m4l/ait-control/`) calls `ait` via configured **`AIT_BIN`**, surfaces exit codes, and formats **`doctor --json`** for the panel — see [../m4l/ait-control/README.md](../m4l/ait-control/README.md).
+
 Shared rules:
 
 - **`schema_version`:** `1` for all objects in this section until a breaking change.
