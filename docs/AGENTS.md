@@ -7,6 +7,8 @@ Product, architecture, and **normative** CLI documentation for **ait**.
 - `design/ait-design.md` — System shape, commands, module layout, observability
 - `spec/cli-contract.md` — Exit codes, flags, finding codes, YAML schemas, hook template, timeouts
 - `spec/implementation-specs.md` — Per-issue breakdown for **ALC-219–227**
+- `spec/doctor-json-example.json` — Example `doctor --json` output (schema v1)
+- `user/collaboration-playbook.md` — User guide: Git + Live collaboration habits
 - `features/ait-cli-mvp.md` — MVP feature index linking plan + Linear + specs
 - `adr/` — Decisions (e.g. Go + cobra for CLI)
 
