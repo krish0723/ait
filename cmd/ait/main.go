@@ -80,5 +80,6 @@ func newRootCommand() *cobra.Command {
 	root.AddCommand(newVersionCommand())
 	root.AddCommand(newInitCommand())
 	root.AddCommand(newDoctorCommand())
+	root.AddCommand(newHooksCommand())
 	return root
 }

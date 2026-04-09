@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -47,6 +48,26 @@ func (c *Client) IsInsideWorkTree(ctx context.Context, dir string) (bool, error)
 		return false, err
 	}
 	return strings.TrimSpace(out) == "true", nil
+}
+
+// GitDir runs `git rev-parse --git-dir` in dir and returns an absolute path to the repository's .git directory.
+func (c *Client) GitDir(ctx context.Context, dir string) (string, error) {
+	out, _, err := c.runGit(ctx, dir, "rev-parse", "--git-dir")
+	if err != nil {
+		return "", err
+	}
+	gd := strings.TrimSpace(out)
+	if gd == "" {
+		return "", errors.New("git rev-parse --git-dir: empty output")
+	}
+	if !filepath.IsAbs(gd) {
+		gd = filepath.Join(dir, gd)
+	}
+	abs, err := filepath.Abs(gd)
+	if err != nil {
+		return "", err
+	}
+	return filepath.Clean(abs), nil
 }
 
 // Init runs `git init` with working directory dir.
