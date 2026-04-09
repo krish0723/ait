@@ -1,0 +1,7 @@
+{
+  "name": "ait-control-m4l",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Node for Max sidecar for the ait-control Max for Live device (ALC-231).",
+  "license": "UNLICENSED"
+}

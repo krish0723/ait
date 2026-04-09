@@ -39,6 +39,13 @@ Doctor rules live under `internal/rules/` (wired from `cmd/ait` on startup). Emb
 
 Git subprocess calls use **`internal/git`** with a **5s** timeout per invocation. Override the git binary in tests or sandboxes with **`AIT_GIT_PATH`** (absolute path to `git`).
 
+## Max for Live (experimental)
+
+The **`m4l/ait-control/`** patch is a **thin UI** around **`node.script`** + **`child_process`**: you point it at absolute paths for **`AIT_BIN`** and **`GIT_BIN`**, then run an **`ait version`** smoke test. It does **not** bundle the CLI; build or install **`ait`** separately.
+
+- **Layout:** [`m4l/README.md`](m4l/README.md) · [`m4l/ait-control/README.md`](m4l/ait-control/README.md)
+- **Install, Gatekeeper, PATH pitfalls, manual smoke:** [`docs/user/m4l-ait-control.md`](docs/user/m4l-ait-control.md)
+
 ## Repo status
 
 Go **CLI scaffold** is in place (`cmd/ait`, `internal/*` stubs). Track MVP work via Linear **ALC-220–227** (epic **ALC-219**).
