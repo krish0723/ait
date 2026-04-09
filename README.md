@@ -26,6 +26,8 @@ go build -o ait ./cmd/ait
 ./ait init --dry-run --path ./my-project
 ./ait doctor          # health checks (see docs/spec/cli-contract.md)
 ./ait doctor --fail-on warn
+./ait hooks install   # pre-commit → ait doctor --hook
+./ait hooks uninstall
 ```
 
 Install from source: `go install github.com/krish0723/ait/cmd/ait@latest` (module matches this repository).
