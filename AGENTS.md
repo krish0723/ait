@@ -21,6 +21,7 @@ CLI tooling for version-controlling music production projects (Ableton-first MVP
 - `internal/config/` — optional `.ait/config.yaml`
 - `internal/rules/` — doctor rules + tests/fixtures
 - `internal/hooks/` — pre-commit install/uninstall (§12)
+- `m4l/` — Max for Live device sources (`ait-control`); see [m4l/README.md](m4l/README.md) and [docs/user/m4l-ait-control.md](docs/user/m4l-ait-control.md)
 
 ## Conventions
 - **Specs first:** [docs/spec/implementation-specs.md](docs/spec/implementation-specs.md) + [docs/spec/cli-contract.md](docs/spec/cli-contract.md); align [docs/design/ait-design.md](docs/design/ait-design.md) + [docs/PRD.md](docs/PRD.md) when behavior changes
