@@ -2,11 +2,13 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
-The original systems design listed **NG: no plugin bundling** for the MVP CLI. Users still want **in-Live** control for the same workflows (`init`, `doctor`, hooks, git) without relying on Terminal.
+The original systems design listed **NG4** as “no plugin bundling,” which was intended to mean **we do not ship or redistribute third-party plugin binaries or factory/pack audio inside the `ait` artifact**—not “no UI inside Ableton.” Users still want **in-Live** control for the same workflows (`init`, `doctor`, hooks, git) without relying on Terminal.
+
+**Security / environment assumptions:** The M4L runtime inherits **Live’s environment**; **`PATH` may omit** Homebrew or custom install locations. Implementations should resolve **`ait`** via **configured absolute path** (or explicit discovery documented for users). Invoking **`git`** follows the same rules; **`AIT_GIT_PATH`** (or OS `git` in a known location) should be documented for device authors. **No elevated privileges** are required; the device runs only what the user could run in a shell on the same machine.
 
 Options:
 
@@ -29,5 +31,5 @@ Adopt **Option 1** for vNext: a **Max for Live** device using **`node.script`** 
 ## Consequences
 
 - **Positive:** Meets user workflow; reuses all CLI logic; `doctor --json` already fits UI parsing.
-- **Negative:** Distribution/signing/PATH friction; Live users must install **`ait`** separately (until a bundled release story exists).
+- **Negative:** Distribution/signing/PATH friction; Live users must install **`ait`** separately (until a bundled release story exists). **Gatekeeper:** sharing a downloaded **`.amxd`** may trigger quarantine; **notarization** and staple expectations should be documented for any **redistributed** device build.
 - **Follow-up:** Document Gatekeeper/notarization for shared devices; consider `version --json` and other stable outputs (**ALC-230**).

@@ -2,14 +2,14 @@
 
 | Field | Value |
 |-------|--------|
-| **Version** | 0.2 |
-| **Last updated** | 2026-04-03 |
+| **Version** | 0.3 |
+| **Last updated** | 2026-04-09 |
 | **Author** | Product (generate-prd) |
 | **Status** | Draft |
 
 ## Executive summary
 
-**ait** is a Git-oriented helper for music producers using digital audio workstations (DAWs). It encodes **opinionated defaults** (ignore rules, optional LFS policies, validation) so teams—starting with **Ableton Live**—can **work in parallel** without destroying shared repos: clear **ownership**, **handoffs**, and **hygiene** over promises of automatic merging of proprietary session formats. **Initial releases target macOS only** (Windows/Linux deferred). MVP is a **CLI** (`init`, `doctor`, templates/hooks) plus documentation; **Logic Pro** and other DAWs follow via the same **profile** model.
+**ait** is a Git-oriented helper for music producers using digital audio workstations (DAWs). It encodes **opinionated defaults** (ignore rules, optional LFS policies, validation) so teams—starting with **Ableton Live**—can **work in parallel** without destroying shared repos: clear **ownership**, **handoffs**, and **hygiene** over promises of automatic merging of proprietary session formats. **Initial releases target macOS only** (Windows/Linux deferred). MVP is a **CLI** (`init`, `doctor`, templates/hooks) plus documentation; **Logic Pro** and other DAWs follow via the same **profile** model. **Optional vNext:** an **in-Live Max for Live** control surface may wrap the same workflows by spawning the **`ait`** and **`git`** binaries (see [ADR-002](adr/ADR-002-max-for-live-ui.md)); behavior and contracts stay **CLI-first**.
 
 ## Goals
 
@@ -17,13 +17,14 @@
 - G2: **`doctor`** detects **high-frequency mistakes** (committed `Backup/` trees, missing collect semantics where heuristics apply, oversize binaries without LFS policy) and returns **actionable messages** (exit non-zero when blocking issues exist).
 - G3: **Parallel collaboration** is **supported by convention**: documented **single-writer-per-set** default, optional **advisory lock** metadata, **handoff** expectations—so users know how to branch without expecting magic `.als` merges in v1.
 - G4: **Extensible DAW profiles**: Ableton is the reference implementation; adding Logic (or others) is **configuration + rules**, not a fork of the product.
+- G5: **(vNext, macOS)** Producers may use an **optional Max for Live device** inside Ableton for the same **`init` / `doctor` / hooks** flows as the CLI, without changing the **canonical** CLI contract; the device is a **UI + subprocess wrapper** only (no merge engine in Live).
 
 ## Non-goals
 
 - NG1: **Guaranteed automatic three-way merge** of two `.als` versions into a valid Live Set (may be researched later; not MVP).
 - NG2: **Deep semantic parse + round-trip edit** of `.als` XML (gzip-wrapped); any text conversion is **opt-in**, **read-only** for diagnostics until explicitly scoped and tested.
 - NG3: **Hosting** of remotes, team identity, or billing—`ait` orchestrates **local Git + Git LFS** (and docs for hosts), not a SaaS.
-- NG4: **Plugin / VST bundling** or legal clearance for redistributing factory/pack audio—product may **warn** only.
+- NG4: **Bundling or redistributing** third-party **plugin binaries** (VST/AU, etc.) or Ableton **factory/pack audio** inside the **`ait` distribution**—the product may **warn** only; users install their own plugins and packs. *(This does **not** exclude an optional **Max for Live** UI that invokes a **separately installed** `ait` binary; see [ADR-002](adr/ADR-002-max-for-live-ui.md).)*
 - NG5: **Windows and Linux support** in the first shipping releases—**out of scope** until explicitly replanned; issues on other OSes are best-effort / unsupported.
 
 ## Personas
@@ -68,6 +69,7 @@
 | FR-6 | **Advisory lock** file spec + `doctor` check for stale/overlapping locks | P2 | No hard Git enforcement |
 | FR-7 | **Profile schema** documents how **Logic** (`.logicx` package/folder) differs; second profile is **config-only** before deep parsers | P2 | No Logic parser in MVP |
 | FR-8 | Read-only **`.als` inspection** (e.g. list external references) | P3 | Post-MVP unless spike |
+| FR-9 | **(vNext, macOS)** Optional **Max for Live** device: UI in Live that runs **`ait`** / **`git`** via subprocess (e.g. `node.script`); **must not** redefine CLI semantics—[`cli-contract.md`](spec/cli-contract.md) remains normative | P2 | Distribution, PATH, and Gatekeeper/notarization for shared devices are **product risks** (documented in ADR-002) |
 
 ## Non-functional requirements
 
@@ -94,6 +96,7 @@
 ## Dependencies & integrations
 
 - **Git** and **Git LFS** ([Git LFS](https://git-lfs.com/)) — optional but first-class in docs and profiles.
+- **Max for Live (optional vNext)** — in-host UI per [ADR-002](adr/ADR-002-max-for-live-ui.md); **Node** runtime inside Live for `node.script` only; **`ait`** still installed and resolved on disk (PATH or configured absolute path).
 - **Ableton Live** project semantics — official Help: [Live-specific file types](https://help.ableton.com/hc/en-us/articles/209769625-Live-specific-file-types), [Collect All and Save](https://help.ableton.com/hc/en-us/articles/209775645-Collect-All-and-Save), [Backup Sets](https://help.ableton.com/hc/en-us/articles/360000377870-Backup-Sets), [Managing Files and Sets (manual)](https://www.ableton.com/en/manual/managing-files-and-sets/).
 - **Prior art (non-blocking):** Community tools such as [ableton-git](https://github.com/clintburgos/ableton-git), [ablegit](https://github.com/thorhop/ablegit), [alsdiff](https://github.com/krfantasy/alsdiff), [Ableton-Live-tools](https://github.com/danielbayley/Ableton-Live-tools) — inform features, not bundle.
 - **Logic (roadmap):** [LOC FDD — Logic project](https://www.loc.gov/preservation/digital/formats/fdd/fdd000640.shtml), Apple [Save projects](https://support.apple.com/guide/logicpro/save-projects-lgcpce128e82/mac).
@@ -109,6 +112,7 @@
 | Parallel editors expect real-time merge | Trust loss | **Non-goals** and playbook **prominent** in README |
 | Profile drift across Live versions | False positives in `doctor` | Versioned profiles (`ableton@12` etc.) |
 | macOS-only v1 | Windows/Linux producers cannot use supported install path | Document intent; revisit when scope expands |
+| M4L device: PATH, signing, shared `.amxd` | Users cannot find `ait`, or macOS blocks unsigned device | Docs: prefer **absolute path** to `ait`; document Homebrew layout; Gatekeeper/notarization story for redistributed devices (**ALC-230+**) |
 
 ## Open questions (TBD)
 
@@ -148,5 +152,6 @@
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| 0.3 | 2026-04-09 | product | G5/FR-9 optional Max for Live (macOS vNext); NG4 narrowed vs M4L subprocess UI; ADR-002 linked; risks row for PATH/signing |
 | 0.2 | 2026-04-03 | product | macOS-only scope for initial releases; Windows/Linux deferred; NG5 and NFR updated |
 | 0.1 | 2026-04-03 | generate-prd | Initial draft from parallel capability research |

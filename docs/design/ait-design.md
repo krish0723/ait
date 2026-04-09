@@ -2,26 +2,27 @@
 
 | Field | Value |
 |-------|--------|
-| **PRD** | [docs/PRD.md](../PRD.md) v0.2 |
-| **Design version** | 0.1 |
-| **Last updated** | 2026-04-03 |
+| **PRD** | [docs/PRD.md](../PRD.md) v0.3 |
+| **Design version** | 0.2 |
+| **Last updated** | 2026-04-09 |
 | **Status** | Draft |
 
 ## Revision history (design)
 
 | Version | Date | Notes |
 |---------|------|--------|
+| 0.2 | 2026-04-09 | Max for Live integration diagram + alignment with PRD v0.3 / ADR-002 |
 | 0.1 | 2026-04-03 | Initial design from PRD v0.2 |
 
 ---
 
 ## Design brief (Phase 3)
 
-**Problem & scope:** Producers need Git defaults that match how **Ableton Live** lays out projects (`.als`, `Backup/`, samples, analysis sidecars) so repos stay **cloneable, legible, and safe for parallel humans**—without promising impossible merges of proprietary session files. **macOS only** for v1.
+**Problem & scope:** Producers need Git defaults that match how **Ableton Live** lays out projects (`.als`, `Backup/`, samples, analysis sidecars) so repos stay **cloneable, legible, and safe for parallel humans**—without promising impossible merges of proprietary session files. **macOS only** for v1. **Optional vNext:** a **Max for Live** device may expose the same flows inside Live (see integration diagram below); **CLI + `cli-contract.md` stay canonical**.
 
 **Architecture (1–2 sentences):** A **single CLI** loads **versioned DAW profiles** (declarative ignore/LFS/doctor rules) and applies them to the **working tree** via file templates and optional **Git hooks**; all heavy lifting remains **Git + Git LFS** invoked as subprocesses. No hosted service.
 
-**Top risks:** (1) False positives/negatives in `doctor` across Live versions. (2) Users expect multi-writer `.als` merge—mitigated by docs + lock semantics. (3) LFS/host quota surprises.
+**Top risks:** (1) False positives/negatives in `doctor` across Live versions. (2) Users expect multi-writer `.als` merge—mitigated by docs + lock semantics. (3) LFS/host quota surprises. (4) **M4L:** PATH to `ait`, Gatekeeper/notarization if the device is shared as an `.amxd`.
 
 **Open:** Exact **distribution** formula (Homebrew vs npm wrapper); **default preset** for samples (ignored vs LFS).
 
@@ -38,7 +39,7 @@
 | G1–G4 | Ship **profile-driven** `init` + `doctor` + docs + collaboration playbook; **Ableton profile v1** hardens before Logic profile stub. |
 | FR-1–FR-3 P0 | **Template merge** for `.gitignore` / `.gitattributes`; **rule engine** for doctor; **bundled markdown docs** in repo and/or embedded in CLI `ait docs`. |
 | FR-4–FR-8 | **Preset** = named bundle over same profile schema; hooks + lock file **schema**; Logic = **config-only profile**; `.als` introspection **post-MVP**. |
-| NG1–NG5 | No merge engine, no `.als` round-trip, no SaaS, no plugin bundling, **no Windows/Linux** release targets for v1. |
+| NG1–NG5 | No merge engine, no `.als` round-trip, no SaaS; **NG4** = no **redistributing** third-party plugins/factory audio *inside the `ait` artifact* (M4L UI that shells to a separately installed `ait` is allowed—[ADR-002](../adr/ADR-002-max-for-live-ui.md)); **no Windows/Linux** release targets for v1. |
 | KPIs | Measure **doctor latency**, **init idempotency**, pilot **signal quality** (manual survey). |
 
 ---
@@ -63,6 +64,7 @@
 | First-time Git setup | Ensure `.git` exists or instruct; run `git lfs install` when LFS policy selected; never store credentials. |
 | Validate repo health | **`ait doctor`**: run **rules** from profile + preset; subprocess checks for `git`, `git-lfs` presence/version. |
 | Parallel collaboration | **Docs** (playbook) + optional **`.ait/lock.json`** + `doctor` **lock conflict** rule; no server enforcement. |
+| In-Live control (vNext) | **Max for Live** device: **`node.script`** spawns **`ait`** / **`git`**; parses **`doctor --json`** and other stable CLI outputs—**no duplicate business logic** in JS. |
 | CI / engineer path | **`ait doctor --json`** (stretch P0/P1): stable machine-readable **findings** + exit code contract. |
 | Post-clone | Docs + **`ait doctor`** reminder to re-run **`ait hooks install`** if hooks not present. |
 
@@ -135,6 +137,28 @@ flowchart TB
   INIT --> LFS
   DOC --> GITBIN
   DOC --> LFS
+```
+
+### Max for Live integration (optional vNext)
+
+**Flow:** Ableton Live loads a **Max for Live** device. The device’s **`node.script`** uses **`child_process`** (or equivalent) to run the same **`ait`** and **`git`** binaries the user would run in Terminal. **Subprocess boundaries** match ADR-002: prefer **absolute paths** to `ait` when PATH inside Live is unreliable; **`cli-contract.md`** defines stdout, exit codes, and JSON schema—**the device must not fork behavior**.
+
+```mermaid
+flowchart LR
+  subgraph live [Ableton Live]
+    M4L[Max for Live device UI]
+    NS[node.script]
+  end
+  subgraph disk [User Mac disk]
+    AIT[ait binary]
+    GITB[git / git-lfs]
+    PROJ[(Live project + .git)]
+  end
+  M4L --> NS
+  NS -->|spawn subprocess| AIT
+  NS -->|spawn subprocess| GITB
+  AIT --> PROJ
+  GITB --> PROJ
 ```
 
 ### Modules (proposed package layout)
