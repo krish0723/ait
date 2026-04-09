@@ -78,8 +78,8 @@ func newRootCommand() *cobra.Command {
 	}
 	root.PersistentFlags().Bool("verbose", false, "more detail (e.g. doctor rule timings)")
 	root.AddCommand(newVersionCommand())
-	root.AddCommand(newInitCommand())
+	root.AddCommand(newInitCommand(version))
 	root.AddCommand(newDoctorCommand(version))
-	root.AddCommand(newHooksCommand())
+	root.AddCommand(newHooksCommand(version))
 	return root
 }

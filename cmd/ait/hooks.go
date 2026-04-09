@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"path/filepath"
 
 	"github.com/krish0723/ait/internal/git"
@@ -8,18 +9,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newHooksCommand() *cobra.Command {
+func newHooksCommand(aitVersion string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "hooks",
 		Short: "Install or remove the ait pre-commit hook",
 	}
-	cmd.AddCommand(newHooksInstallCommand())
-	cmd.AddCommand(newHooksUninstallCommand())
+	cmd.AddCommand(newHooksInstallCommand(aitVersion))
+	cmd.AddCommand(newHooksUninstallCommand(aitVersion))
 	return cmd
 }
 
-func newHooksInstallCommand() *cobra.Command {
+func newHooksInstallCommand(aitVersion string) *cobra.Command {
 	var path string
+	var jsonOut bool
 	cmd := &cobra.Command{
 		Use:   "install",
 		Short: "Write ait-managed .git/hooks/pre-commit (0755)",
@@ -28,15 +30,29 @@ func newHooksInstallCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return hooks.Install(cmd.Context(), git.NewClient(nil), absPath)
+			ctx := cmd.Context()
+			g := git.NewClient(nil)
+			if err := hooks.Install(ctx, g, absPath); err != nil {
+				return err
+			}
+			if !jsonOut {
+				return nil
+			}
+			pc, err := hooks.PreCommitPath(ctx, g, absPath)
+			if err != nil {
+				return err
+			}
+			return writeHooksMachineJSON(cmd.OutOrStdout(), "hooks.install", aitVersion, absPath, pc, "installed")
 		},
 	}
 	cmd.Flags().StringVar(&path, "path", ".", "repository root")
+	cmd.Flags().BoolVar(&jsonOut, "json", false, "print machine-readable result (schema in cli-contract.md)")
 	return cmd
 }
 
-func newHooksUninstallCommand() *cobra.Command {
+func newHooksUninstallCommand(aitVersion string) *cobra.Command {
 	var path string
+	var jsonOut bool
 	cmd := &cobra.Command{
 		Use:   "uninstall",
 		Short: "Remove ait-managed pre-commit hook only",
@@ -45,9 +61,28 @@ func newHooksUninstallCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return hooks.Uninstall(cmd.Context(), git.NewClient(nil), absPath)
+			ctx := cmd.Context()
+			g := git.NewClient(nil)
+			pc, perr := hooks.PreCommitPath(ctx, g, absPath)
+			if perr != nil {
+				return perr
+			}
+			_, statErr := os.Stat(pc)
+			hadFile := statErr == nil
+			if err := hooks.Uninstall(ctx, g, absPath); err != nil {
+				return err
+			}
+			if !jsonOut {
+				return nil
+			}
+			status := "absent"
+			if hadFile {
+				status = "removed"
+			}
+			return writeHooksMachineJSON(cmd.OutOrStdout(), "hooks.uninstall", aitVersion, absPath, pc, status)
 		},
 	}
 	cmd.Flags().StringVar(&path, "path", ".", "repository root")
+	cmd.Flags().BoolVar(&jsonOut, "json", false, "print machine-readable result (schema in cli-contract.md)")
 	return cmd
 }

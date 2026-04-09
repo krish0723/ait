@@ -13,6 +13,13 @@ func newVersionCommand() *cobra.Command {
 		Short: "Print version information",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			out := cmd.OutOrStdout()
+			jsonOut, err := cmd.Flags().GetBool("json")
+			if err != nil {
+				return err
+			}
+			if jsonOut {
+				return writeVersionMachineJSON(out, version, commit, profileBundleDigest)
+			}
 			long, err := cmd.Flags().GetBool("long")
 			if err != nil {
 				return err
@@ -29,5 +36,6 @@ func newVersionCommand() *cobra.Command {
 		},
 	}
 	cmd.Flags().BoolP("long", "v", false, "print long version (includes embedded profile bundle digest)")
+	cmd.Flags().Bool("json", false, "print machine-readable version (schema in cli-contract.md)")
 	return cmd
 }
