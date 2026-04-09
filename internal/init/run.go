@@ -22,6 +22,10 @@ type Options struct {
 	Preset string
 	DryRun bool
 	Force  bool
+	// JSON, when true, writes one machine-readable JSON object to out (see cli-contract) instead of human lines.
+	JSON bool
+	// AitVersion is embedded in JSON output when JSON is true (e.g. main.version ldflags).
+	AitVersion string
 }
 
 // ResolveProfileID maps CLI --daw to embedded profile id.
@@ -59,6 +63,24 @@ func Run(ctx context.Context, g *git.Client, opts Options, out io.Writer) error 
 		return err
 	}
 
+	var rep *InitJSONReport
+	if opts.JSON {
+		av := opts.AitVersion
+		if av == "" {
+			av = "dev"
+		}
+		rep = &InitJSONReport{
+			SchemaVersion:  initJSONSchemaVersion,
+			Kind:           "init",
+			AitVersion:     av,
+			RepositoryRoot: dir,
+			Profile:        profID,
+			Preset:         preset,
+			DryRun:         opts.DryRun,
+			Files:          make([]InitJSONFile, 0, 2),
+		}
+	}
+
 	inRepo, err := g.IsInsideWorkTree(ctx, dir)
 	if err != nil {
 		if !isNotAGitRepo(err) {
@@ -69,13 +91,23 @@ func Run(ctx context.Context, g *git.Client, opts Options, out io.Writer) error 
 
 	if !inRepo {
 		if opts.DryRun {
-			fmt.Fprintf(out, "would run: git init (in %s)\n", dir)
+			if rep != nil {
+				rep.GitInit = &InitJSONGitInit{Status: "dry_run"}
+			} else {
+				fmt.Fprintf(out, "would run: git init (in %s)\n", dir)
+			}
 		} else {
 			if err := g.Init(ctx, dir); err != nil {
 				return fmt.Errorf("git init: %w", err)
 			}
-			fmt.Fprintf(out, "git init: ok (%s)\n", filepath.Join(dir, ".git"))
+			if rep != nil {
+				rep.GitInit = &InitJSONGitInit{Status: "performed"}
+			} else {
+				fmt.Fprintf(out, "git init: ok (%s)\n", filepath.Join(dir, ".git"))
+			}
 		}
+	} else if rep != nil {
+		rep.GitInit = &InitJSONGitInit{Status: "skipped"}
 	}
 
 	type fileJob struct {
@@ -95,31 +127,55 @@ func Run(ctx context.Context, g *git.Client, opts Options, out io.Writer) error 
 			return fmt.Errorf("%s: %w", job.name, err)
 		}
 		if bytes.Equal(existing, newBytes) {
-			fmt.Fprintf(out, "%s: unchanged\n", job.name)
+			if rep != nil {
+				rep.Files = append(rep.Files, InitJSONFile{Path: job.name, Status: "unchanged"})
+			} else {
+				fmt.Fprintf(out, "%s: unchanged\n", job.name)
+			}
 			continue
 		}
 		if opts.DryRun {
-			fmt.Fprintf(out, "would write %s (%d -> %d bytes)\n", job.name, len(existing), len(newBytes))
+			if rep != nil {
+				rep.Files = append(rep.Files, InitJSONFile{Path: job.name, Status: "dry_run_pending"})
+			} else {
+				fmt.Fprintf(out, "would write %s (%d -> %d bytes)\n", job.name, len(existing), len(newBytes))
+			}
 			continue
 		}
 		if err := os.WriteFile(job.path, newBytes, 0o644); err != nil {
 			return err
 		}
-		fmt.Fprintf(out, "wrote %s\n", job.name)
+		if rep != nil {
+			rep.Files = append(rep.Files, InitJSONFile{Path: job.name, Status: "written"})
+		} else {
+			fmt.Fprintf(out, "wrote %s\n", job.name)
+		}
 	}
 
 	needLFS := preset == "samples-lfs" || strings.Contains(rp.Gitattributes, "filter=lfs")
 	if needLFS {
 		if opts.DryRun {
-			fmt.Fprintln(out, "would run: git lfs install")
+			if rep != nil {
+				rep.GitLFS = &InitJSONGitLFS{Status: "dry_run"}
+			} else {
+				fmt.Fprintln(out, "would run: git lfs install")
+			}
 		} else {
 			if err := g.LFSInstall(ctx, dir); err != nil {
 				return fmt.Errorf("git lfs install: %w (install https://git-lfs.com if missing)", err)
 			}
-			fmt.Fprintln(out, "git lfs install: ok")
+			if rep != nil {
+				rep.GitLFS = &InitJSONGitLFS{Status: "performed"}
+			} else {
+				fmt.Fprintln(out, "git lfs install: ok")
+			}
 		}
 	}
 
+	if rep != nil {
+		rep.NextHint = "ait doctor"
+		return WriteInitJSON(out, rep)
+	}
 	fmt.Fprintln(out, "Next: ait doctor")
 	return nil
 }

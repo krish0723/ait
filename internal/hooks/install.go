@@ -30,6 +30,18 @@ var (
 	ErrForeignPreCommit = errors.New("pre-commit exists and is not managed by ait")
 )
 
+// PreCommitPath returns the absolute path to .git/hooks/pre-commit for repoRoot.
+func PreCommitPath(ctx context.Context, g *git.Client, repoRoot string) (string, error) {
+	if g == nil {
+		g = git.NewClient(nil)
+	}
+	gitDir, err := g.GitDir(ctx, repoRoot)
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(gitDir, "hooks", "pre-commit"), nil
+}
+
 // Install writes .git/hooks/pre-commit with mode 0755, or returns ErrForeignPreCommit if a non-ait hook is present.
 func Install(ctx context.Context, g *git.Client, repoRoot string) error {
 	if g == nil {

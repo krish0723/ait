@@ -45,9 +45,11 @@ Authoritative detail for MVP implementation. Pair with [implementation-specs.md]
 
 **`ait doctor`:** `--json`, `--fail-on error|warn`, `--hook` (quiet, single-line summary + exit code only on failure), `--daw`, `--preset` (override config).
 
-**`ait init`:** `--daw` (required for MVP or default `ableton`), `--preset`, `--dry-run`, `--force` (overwrite ait-managed blocks only).
+**`ait init`:** `--daw` (required for MVP or default `ableton`), `--preset`, `--dry-run`, `--force` (overwrite ait-managed blocks only), `--json` (machine summary; see §6b).
 
-**`ait hooks`:** `install` | `uninstall` (no destructive flags on `install`).
+**`ait hooks`:** `install` | `uninstall` (no destructive flags on `install`); each subcommand may take `--json` (machine result; see §6b).
+
+**`ait version`:** `--long` / `-v` for human multi-line output; `--json` for machine output (see §6b). If both `--json` and `-v` are set, **`--json` wins** (JSON only on stdout).
 
 ---
 
@@ -120,6 +122,79 @@ Top-level object:
 - **`schema_version`:** integer, bump only on breaking JSON changes.
 - **`findings`:** sorted per §4.
 - Optional later: `duration_ms` — not required in v1.
+
+---
+
+## 6b. Machine JSON for UI consumers (schema v1)
+
+Max for Live and other automations should use these **additive** `--json` flags. Default stdout when `--json` is omitted stays human-oriented. **`doctor --json`** remains the health report (§6); it is **not** duplicated here.
+
+Shared rules:
+
+- **`schema_version`:** `1` for all objects in this section until a breaking change.
+- **`kind`:** discriminant string; UI may switch on `kind` without guessing from field shape.
+- One **pretty-printed JSON object** per line-terminated stdout payload (same style as `doctor --json`).
+- On failure, commands still print **human errors on stderr** and use normal exit codes (§2); no guaranteed JSON on error paths in v1.
+
+### `ait version --json`
+
+```json
+{
+  "schema_version": 1,
+  "kind": "version",
+  "ait_version": "0.1.0",
+  "commit": "abc123…",
+  "go_version": "go1.22.0",
+  "profile_bundle_digest": "sha256:…"
+}
+```
+
+- **`profile_bundle_digest`:** from embedded profiles bundle (may be empty before embed is wired; build sets via `-ldflags` when applicable).
+
+### `ait init --json`
+
+Emitted **only on success** (after merges / writes). Example:
+
+```json
+{
+  "schema_version": 1,
+  "kind": "init",
+  "ait_version": "0.1.0",
+  "repository_root": "/abs/project",
+  "profile": "ableton@12",
+  "preset": "samples-ignored",
+  "dry_run": false,
+  "git_init": { "status": "performed" },
+  "files": [
+    { "path": ".gitignore", "status": "written" },
+    { "path": ".gitattributes", "status": "unchanged" }
+  ],
+  "git_lfs": { "status": "performed" },
+  "next_hint": "ait doctor"
+}
+```
+
+- **`git_init.status`:** `performed` (ran `git init`) | `dry_run` (would run) | `skipped` (already inside a work tree).
+- **`files[].status`:** `unchanged` | `written` | `dry_run_pending`.
+- **`git_lfs`:** omitted when preset/profile does not require LFS; otherwise `status` is `performed` | `dry_run`.
+- **`next_hint`:** suggested follow-up command for operators (optional).
+
+### `ait hooks install --json` / `ait hooks uninstall --json`
+
+```json
+{
+  "schema_version": 1,
+  "kind": "hooks.install",
+  "ait_version": "0.1.0",
+  "repository_root": "/abs/repo",
+  "pre_commit_path": "/abs/repo/.git/hooks/pre-commit",
+  "status": "installed"
+}
+```
+
+- **`kind`:** `hooks.install` or `hooks.uninstall`.
+- **`status` (install):** `installed`.
+- **`status` (uninstall):** `removed` (file existed and was deleted) | `absent` (no managed hook file was present).
 
 ---
 
